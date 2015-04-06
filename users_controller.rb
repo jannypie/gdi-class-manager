@@ -16,8 +16,8 @@ class UsersController < ApplicationController
   end
 
   def show
-    if authorized_access?(params[:id])
-      @user = User.find_by_id(params[:id]) 
+    @user = User.find(params[:id]) 
+    if logged_in?
       @posts = @user.posts.order(created_at: :desc)
     end
   end
