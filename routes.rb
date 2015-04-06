@@ -1,2 +1,3 @@
-resources :sessions, only: :create, :delete
-resources :user
+root to: 'users#index'
+resources :users
+resources :session, only: [:new, :create, :destroy]
