@@ -1,18 +1,19 @@
 class SessionsController < ApplicationController  
-  skip_before_action :require_login, only: [:new, :create]
+  skip_before_action :authenticate, only: [:create]
 
   def create
-    if user = User.authenticate(params[:session])
-      session[:current_user_id] = user.id
-      redirect_to user_path
+    @user = User.find_by(email: params[:session][:email])
+    if @user && @user.authenticate(params[:session][:password])
+      session[:user_id] = @user.id
+      redirect_to root_path
     else
-      @error = "sername or password invalid"
-      render 'sessions/new'
+      render :new, alert: "Incorrect username or password."
     end
   end
 
   def destroy
-    session[:current_user_id] = nil
-    redirect_to root_url
+    session[:user_id] = nil
+    redirect_to root_path
   end
+  
 end
